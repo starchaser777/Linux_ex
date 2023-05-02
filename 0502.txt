@@ -1,3 +1,5 @@
+  리눅스 사용자 관리
+  
   317  nano /etc/passwd
   318  nano /etc/shadow
   319  nano /etc/passwd
