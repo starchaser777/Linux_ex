@@ -1,0 +1,122 @@
+  317  nano /etc/passwd
+  318  nano /etc/shadow
+  319  nano /etc/passwd
+  320  nano /etc/group
+  321  adduser poly1
+  322  nano /etc/passwd
+  323  adduser --uid 1111 poly2
+  324  adduser --gid 1000 poly3
+  325  tail /etc/passwd
+  326  adduser --home /newhome poly4
+  327  tail /etc/passwd
+  328  adduser --shell /bin/csh poly5
+  329  login
+  330  tail /etc/passwd
+  331  tail /etc/group
+  332  passwd poly1
+  333  login
+  334  usermod --shell /bin/csh poly1
+  335  usermod --groups song poly1
+  336  nano /etc/passwd
+  337  nano /etc/group
+  338  ls /home
+  339  ls /
+  340  userdel -r poly5
+  341  tail /etc/passwd
+  342  ls /home
+  343  sudo apt-get install screen
+  344  screen
+  345  history
+
+  마우스 클릭이 안돼서 스크린을 설치해서 마우스 없이 복사할 수 있는 방법을 시도해보다가 기록이 다 날아갔습니다. 마우스는 껐다 켰더니 다시 정상작동했습니다.
+  history 명령어를 사용하여 이전 명령실행 기록만이라도 복원했습니다.
+
+root@song-virtual-machine:~# chage -l poly1
+마지막으로 암호를 바꾼 날					:  5월 02, 2023
+암호 만료					: 안함
+암호가 비활성화 기간					: 안함
+계정 만료						: 안함
+암호를 바꿀 수 있는 최소 날 수		: 0
+암호를 바꿔야 하는 최대 날 수		: 99999
+암호 만료 예고를 하는 날 수		: 7
+root@song-virtual-machine:~# chage -m 30 poly1
+root@song-virtual-machine:~# chage -l poly1
+마지막으로 암호를 바꾼 날					:  5월 02, 2023
+암호 만료					: 안함
+암호가 비활성화 기간					: 안함
+계정 만료						: 안함
+암호를 바꿀 수 있는 최소 날 수		: 30
+암호를 바꿔야 하는 최대 날 수		: 99999
+암호 만료 예고를 하는 날 수		: 7
+root@song-virtual-machine:~# chage -M 30 poly1
+root@song-virtual-machine:~# chage -l poly1
+마지막으로 암호를 바꾼 날					:  5월 02, 2023
+암호 만료					:  6월 01, 2023
+암호가 비활성화 기간					: 안함
+계정 만료						: 안함
+암호를 바꿀 수 있는 최소 날 수		: 30
+암호를 바꿔야 하는 최대 날 수		: 30
+암호 만료 예고를 하는 날 수		: 7
+root@song-virtual-machine:~# chage -E 2026/12/31 poly1
+root@song-virtual-machine:~# chage -l poly1
+마지막으로 암호를 바꾼 날					:  5월 02, 2023
+암호 만료					:  6월 01, 2023
+암호가 비활성화 기간					: 안함
+계정 만료						: 12월 31, 2026
+암호를 바꿀 수 있는 최소 날 수		: 30
+암호를 바꿔야 하는 최대 날 수		: 30
+암호 만료 예고를 하는 날 수		: 7
+root@song-virtual-machine:~# chage -W 10 poly1
+root@song-virtual-machine:~# chage -l poly1
+마지막으로 암호를 바꾼 날					:  5월 02, 2023
+암호 만료					:  6월 01, 2023
+암호가 비활성화 기간					: 안함
+계정 만료						: 12월 31, 2026
+암호를 바꿀 수 있는 최소 날 수		: 30
+암호를 바꿔야 하는 최대 날 수		: 30
+암호 만료 예고를 하는 날 수		: 10
+root@song-virtual-machine:~# groups
+root
+root@song-virtual-machine:~# groups poly3
+poly3 : song
+root@song-virtual-machine:~# groupadd newgroup1
+root@song-virtual-machine:~# tail /etc/group
+pulse:x:132:
+pulse-access:x:133:
+gdm:x:134:
+lxd:x:135:song
+song:x:1000:poly1
+sambashare:x:136:song
+poly1:x:1001:
+poly2:x:1111:
+poly4:x:1002:
+newgroup1:x:1112:
+root@song-virtual-machine:~# groupadd --gid 2222 newgroup2
+root@song-virtual-machine:~# tail /etc/group
+pulse-access:x:133:
+gdm:x:134:
+lxd:x:135:song
+song:x:1000:poly1
+sambashare:x:136:song
+poly1:x:1001:
+poly2:x:1111:
+poly4:x:1002:
+newgroup1:x:1112:
+newgroup2:x:2222:
+root@song-virtual-machine:~# groupmod --new-name mygroup1 newgroup1
+root@song-virtual-machine:~# nano /etc/group
+root@song-virtual-machine:~# groupdel newgroup2
+root@song-virtual-machine:~# nano /etc/group
+root@song-virtual-machine:~# gpasswd mygroup1
+mygroup1 그룹의 암호를 바꾸는 중
+새 암호: 
+새 암호를 다시 입력하십시오: 
+root@song-virtual-machine:~# gpasswd -a poly1 mygroup1
+사용자 poly1을(를) mygroup1 그룹에 등록 중
+root@song-virtual-machine:~# gpasswd -a poly4 mygroup1
+사용자 poly4을(를) mygroup1 그룹에 등록 중
+root@song-virtual-machine:~# gpasswd -A poly1 mygroup1
+root@song-virtual-machine:~# nano /etc/group
+root@song-virtual-machine:~# gpasswd -d poly4 mygroup1
+사용자 poly4을(를) 그룹 mygroup1에서 제거하는 중
+root@song-virtual-machine:~# nano /etc/group
