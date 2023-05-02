@@ -120,3 +120,95 @@ root@song-virtual-machine:~# nano /etc/group
 root@song-virtual-machine:~# gpasswd -d poly4 mygroup1
 사용자 poly4을(를) 그룹 mygroup1에서 제거하는 중
 root@song-virtual-machine:~# nano /etc/group
+root@song-virtual-machine:~# ^C
+root@song-virtual-machine:~# adduser hanbit1
+'hanbit1' 사용자를 추가 중...
+새 그룹 'hanbit1' (1003) 추가 ...
+새 사용자 'hanbit1' (1004) 을(를) 그룹 'hanbit1' (으)로 추가 ...
+'/home/hanbit1' 홈 디렉터리를 생성하는 중...
+'/etc/skel'에서 파일들을 복사하는 중...
+새 암호: 
+잘못된 비밀번호: 암호는 8 개의 문자 보다 짧습니다
+새 암호 재입력: 
+passwd: 암호를 성공적으로 업데이트했습니다
+hanbit1의 사용자의 정보를 바꿉니다
+새로운 값을 넣거나, 기본값을 원하시면 엔터를 치세요
+	이름 []: 
+	방 번호 []: 
+	직장 전화번호 []: 
+	집 전화번호 []: 
+	기타 []: 
+정보가 올바릅니까? [Y/n] y
+root@song-virtual-machine:~# tail /etc/passwd
+pulse:x:125:132:PulseAudio daemon,,,:/run/pulse:/usr/sbin/nologin
+gnome-initial-setup:x:126:65534::/run/gnome-initial-setup/:/bin/false
+hplip:x:127:7:HPLIP system user,,,:/run/hplip:/bin/false
+gdm:x:128:134:Gnome Display Manager:/var/lib/gdm3:/bin/false
+song:x:1000:1000:song,,,:/home/song:/bin/bash
+poly1:x:1001:1001:Polytech1,509,02-333-5555,02-777-7777,Student:/home/poly1:/bin/csh
+poly2:x:1111:1111:,,,:/home/poly2:/bin/bash
+poly3:x:1002:1000:,,,:/home/poly3:/bin/bash
+poly4:x:1003:1002:,,,:/newhome:/bin/bash
+hanbit1:x:1004:1003:,,,:/home/hanbit1:/bin/bash
+root@song-virtual-machine:~# tail /etc/group
+pulse-access:x:133:
+gdm:x:134:
+lxd:x:135:song
+song:x:1000:poly1
+sambashare:x:136:song
+poly1:x:1001:
+poly2:x:1111:
+poly4:x:1002:
+mygroup1:x:1112:poly1
+hanbit1:x:1003:
+root@song-virtual-machine:~# groupadd ubuntuGroup
+root@song-virtual-machine:~# tail -5 /etc/group
+poly2:x:1111:
+poly4:x:1002:
+mygroup1:x:1112:poly1
+hanbit1:x:1003:
+ubuntuGroup:x:1113:
+root@song-virtual-machine:~# gpasswd -a hanbit1 ubuntuGroup
+사용자 hanbit1을(를) ubuntuGroup 그룹에 등록 중
+root@song-virtual-machine:~# adduser --gid 1113 hanbit2
+'hanbit2' 사용자를 추가 중...
+새 사용자 'hanbit2' (1005) 을(를) 그룹 'ubuntuGroup' (으)로 추가 ...
+'/home/hanbit2' 홈 디렉터리를 생성하는 중...
+'/etc/skel'에서 파일들을 복사하는 중...
+새 암호: 
+잘못된 비밀번호: 암호는 8 개의 문자 보다 짧습니다
+새 암호 재입력: 
+passwd: 암호를 성공적으로 업데이트했습니다
+hanbit2의 사용자의 정보를 바꿉니다
+새로운 값을 넣거나, 기본값을 원하시면 엔터를 치세요
+	이름 []: 
+	방 번호 []: 
+	직장 전화번호 []: 
+	집 전화번호 []: 
+	기타 []: 
+정보가 올바릅니까? [Y/n] y
+root@song-virtual-machine:~# nano /etc/group
+root@song-virtual-machine:~# tail /etc/passwd
+gnome-initial-setup:x:126:65534::/run/gnome-initial-setup/:/bin/false
+hplip:x:127:7:HPLIP system user,,,:/run/hplip:/bin/false
+gdm:x:128:134:Gnome Display Manager:/var/lib/gdm3:/bin/false
+song:x:1000:1000:song,,,:/home/song:/bin/bash
+poly1:x:1001:1001:Polytech1,509,02-333-5555,02-777-7777,Student:/home/poly1:/bin/csh
+poly2:x:1111:1111:,,,:/home/poly2:/bin/bash
+poly3:x:1002:1000:,,,:/home/poly3:/bin/bash
+poly4:x:1003:1002:,,,:/newhome:/bin/bash
+hanbit1:x:1004:1003:,,,:/home/hanbit1:/bin/bash
+hanbit2:x:1005:1113:,,,:/home/hanbit2:/bin/bash //우분투 그룹의 서브로 들어감. 재지정 필요
+root@song-virtual-machine:~# gpasswd -a hanbit2 ubuntuGroup
+사용자 hanbit2을(를) ubuntuGroup 그룹에 등록 중
+root@song-virtual-machine:~# tail /etc/group
+gdm:x:134:
+lxd:x:135:song
+song:x:1000:poly1
+sambashare:x:136:song
+poly1:x:1001:
+poly2:x:1111:
+poly4:x:1002:
+mygroup1:x:1112:poly1
+hanbit1:x:1003:
+ubuntuGroup:x:1113:hanbit1,hanbit2
