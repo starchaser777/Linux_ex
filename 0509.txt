@@ -1,0 +1,164 @@
+<1교시>
+// 파일 유형(p.185)
+개념 공부
+
+// 파일 허가권(p.186)
+root@song-virtual-machine:~# touch mydata.txt
+root@song-virtual-machine:~# ls -l mydata.txt
+-rw-r--r-- 1 root root 0  5월  9 09:26 mydata.txt
+root@song-virtual-machine:~# chmod 777 mydata.txt
+root@song-virtual-machine:~# ls -l mydata.txt
+-rwxrwxrwx 1 root root 0  5월  9 09:26 mydata.txt
+root@song-virtual-machine:~# chmod 644 mydata.txt
+root@song-virtual-machine:~# ls -l mydata.txt
+-rw-r--r-- 1 root root 0  5월  9 09:26 mydata.txt
+root@song-virtual-machine:~# chmod u+x mydata.txt
+root@song-virtual-machine:~# ls -l mydata.txt
+-rwxr--r-- 1 root root 0  5월  9 09:26 mydata.txt
+root@song-virtual-machine:~# chmod u-w mydata.txt
+root@song-virtual-machine:~# ls -l mydata.txt
+-r-xr--r-- 1 root root 0  5월  9 09:26 mydata.txt
+root@song-virtual-machine:~# chmod g+w mydata.txt
+root@song-virtual-machine:~# ls -l mydata.txt
+-r-xrw-r-- 1 root root 0  5월  9 09:26 mydata.txt
+root@song-virtual-machine:~# chmod o+x mydata.txt
+root@song-virtual-machine:~# ls -l mydata.txt
+-r-xrw-r-x 1 root root 0  5월  9 09:26 mydata.txt
+
+<2교시>
+// 파일 소유권(p.187)
+root@song-virtual-machine:~# tail /etc/shadow
+gnome-initial-setup:*:19411:0:99999:7:::
+hplip:*:19411:0:99999:7:::
+gdm:*:19411:0:99999:7:::
+song:$y$j9T$j3vyYTy.yedTPkyLLj1Y/1$mKZlAB4qzEJXMGzsqtPiusBrT86nrQ5Iuo88gkho5U/:19430:0:99999:7:::
+poly1:$y$j9T$44yEFlGTFKloVhlFvKUDP1$2nCiR3hgAlpqbqQTJspMzDaP5/TtzHbkh2cewuWpLj4:19479:30:30:10::20818:
+poly2:$y$j9T$YDBG/IDlHZzD4Qj2K7Wd20$LChQSfyw48cCMi3.t/jsPYTWHOadqtDskN2Gg3/I5WC:19479:0:99999:7:::
+poly3:$y$j9T$jWF0nAp38iVJdVbUmPWvG1$gvTJUJxNSNDpgfARRVcd9/2QwfG1eMNkt2n76rJ0nG9:19479:0:99999:7:::
+poly4:$y$j9T$k7DLAKC9xU8UZp3NDVIB..$sZwEuEYMGLwgwPyiuLobpZcB7b3B4f0n0RG9g2TaVf0:19479:0:99999:7:::
+hanbit1:$y$j9T$TW55.sC8dhZue1Ag5zU/8/$cOf8QAqIgvPkZAHcRk1.KBFK2dlU1zwcJo.brfrYJd8:19479:0:99999:7:::
+hanbit2:$y$j9T$jZzxUedWRt/6W2B9r6lLr.$ZF7396bjOEybAi2sgcTSRrt8Ry4mDj2fPIN4n4L/HFA:19479:0:99999:7:::
+root@song-virtual-machine:~# chown poly1 mydata.txt
+root@song-virtual-machine:~# ls -l mydata.txt
+-r-xrw-r-x 1 poly1 root 0  5월  9 09:26 mydata.txt
+root@song-virtual-machine:~# chown poly2.poly2 mydata.txt
+root@song-virtual-machine:~# ls -l mydata.txt
+-r-xrw-r-x 1 poly2 poly2 0  5월  9 09:26 mydata.txt
+root@song-virtual-machine:~# chgrp root mydata.txt
+root@song-virtual-machine:~# ls -l mydata.txt
+-r-xrw-r-x 1 poly2 root 0  5월  9 09:26 mydata.txt
+
+// [실습 5-2] 파일 허가권과 소유권 실행하기(p.187)
+root@song-virtual-machine:~# nano sample
+root@song-virtual-machine:~# cat sample
+리눅스 명령 연습중
+파일허가권과 소유권에 대한 명령 실습중
+ls /var
+root@song-virtual-machine:~# ls -l sample
+-rw-r--r-- 1 root root 91  5월  9 10:15 sample
+root@song-virtual-machine:~# chmod u+x sample
+root@song-virtual-machine:~# ls -l sample
+-rwxr--r-- 1 root root 91  5월  9 10:15 sample
+root@song-virtual-machine:~# sample
+명령어 'sample' 을(를) 찾을 수 없습니다. 그러나 다음을 통해 설치할 수 있습니다:
+apt install barcode
+root@song-virtual-machine:~# ./sample
+./sample: 줄 1: 리눅스: 명령어를 찾을 수 없음
+./sample: 줄 2: 파일허가권과: 명령어를 찾을 수 없음
+backups  crash	local  log   metrics  run   spool
+cache	 lib	lock   mail  opt      snap  tmp
+root@song-virtual-machine:~# ls -l sample
+-rwxr--r-- 1 root root 91  5월  9 10:15 sample
+root@song-virtual-machine:~# chown song sample
+root@song-virtual-machine:~# ls -l sample
+-rwxr--r-- 1 song root 91  5월  9 10:15 sample
+root@song-virtual-machine:~# chown song.song sample
+root@song-virtual-machine:~# ls -l sample
+-rwxr--r-- 1 song song 91  5월  9 10:15 sample
+root@song-virtual-machine:~# chmod 754 sample
+root@song-virtual-machine:~# ls -l sample
+-rwxr-xr-- 1 song song 91  5월  9 10:15 sample
+root@song-virtual-machine:~# su - song
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+song@song-virtual-machine:~$ pwd
+/home/song
+song@song-virtual-machine:~$ ls -l /root/sample
+ls: '/root/sample'에 접근할 수 없음: 허가 거부
+song@song-virtual-machine:~$ ls -ld /root
+drwx------ 16 root root 4096  5월  9 10:15 /root
+song@song-virtual-machine:~$ logout
+root@song-virtual-machine:~# mv sample ~song
+root@song-virtual-machine:~# su - song
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+song@song-virtual-machine:~$ ls -l sample
+-rwxr-xr-- 1 song song 91  5월  9 10:15 sample
+song@song-virtual-machine:~$ pwd
+/home/song
+song@song-virtual-machine:~$ ls -ld /home/song
+drwxr-x--- 14 song song 4096  5월  9 10:38 /home/song
+song@song-virtual-machine:~$ chmod 777 sample
+song@song-virtual-machine:~$ ls -l sample
+-rwxrwxrwx 1 song song 91  5월  9 10:15 sample
+song@song-virtual-machine:~$ chown root.root sample
+chown: 'sample'의 소유권 바꾸는 중: 명령을 허용하지 않음 // chown 명령어는 root 사용자만 실행 가능
+song@song-virtual-machine:~$ logout
+
+// [실습 5-3] 하드 링크와 심벌릭 링크(소프트 링크) 생성하기(p.191) 1
+root@song-virtual-machine:~# mkdir linkdir
+root@song-virtual-machine:~# cd linkdir
+root@song-virtual-machine:~/linkdir# nano originalfile
+root@song-virtual-machine:~/linkdir# cat originalfile
+링크시킬 원본 파일을 작성합니다.
+
+<3교시>
+// [실습 5-3] 하드 링크와 심벌릭 링크(소프트 링크) 생성하기(p.192~193) 2
+root@song-virtual-machine:~/linkdir# ls
+originalfile
+root@song-virtual-machine:~/linkdir# ln originalfile hardlink
+root@song-virtual-machine:~/linkdir# ln -s originalfile softlink
+root@song-virtual-machine:~/linkdir# ls -l
+합계 8
+-rw-r--r-- 2 root root 47  5월  9 10:51 hardlink
+-rw-r--r-- 2 root root 47  5월  9 10:51 originalfile
+lrwxrwxrwx 1 root root 12  5월  9 11:10 softlink -> originalfile
+root@song-virtual-machine:~/linkdir# ls -il
+합계 8
+285578 -rw-r--r-- 2 root root 47  5월  9 10:51 hardlink
+285578 -rw-r--r-- 2 root root 47  5월  9 10:51 originalfile
+285698 lrwxrwxrwx 1 root root 12  5월  9 11:10 softlink -> originalfile
+root@song-virtual-machine:~/linkdir# mv originalfile ../
+root@song-virtual-machine:~/linkdir# ls
+hardlink  softlink
+root@song-virtual-machine:~/linkdir# cat hardlink
+링크시킬 원본 파일을 작성합니다.
+root@song-virtual-machine:~/linkdir# cat softlink
+cat: softlink: 그런 파일이나 디렉터리가 없습니다
+root@song-virtual-machine:~/linkdir# cd
+root@song-virtual-machine:~# ls -il originalfile
+285578 -rw-r--r-- 2 root root 47  5월  9 10:51 originalfile
+root@song-virtual-machine:~# mv originalfile ./linkdir
+root@song-virtual-machine:~# cd linkdir
+root@song-virtual-machine:~/linkdir# ls
+hardlink  originalfile  softlink
+root@song-virtual-machine:~/linkdir# cat softlink
+링크시킬 원본 파일을 작성합니다.
+
+// 프로세스(p.194~195)
+개념 공부
+
+// [실습 5-4] 포그라운드 프로세스와 백그라운드 프로세스 살펴보기(p.195) 1
+root@song-virtual-machine:~# yes > /dev/null
+
+-- 새 터미널 창 열어서 명령어 작성 --
+root@song-virtual-machine:~# ps -ef|grep yes
+root        2916    1947 99 11:39 pts/0    00:01:43 yes
+root        3011    2997  0 11:41 pts/1    00:00:00 grep --color=auto yes
+root@song-virtual-machine:~# kill -9 2916
+
+-- 원래 터미널 창에 출력 --
+죽었음
+root@song-virtual-machine:~# 
