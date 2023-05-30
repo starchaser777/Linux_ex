@@ -1,0 +1,303 @@
+[1교시]
+// [실습 12-1] 텔넷 서버 설치하고 사용하기(p.385~387)
+root@song-virtual-machine:~# dpkg -l telnetd
+dpkg-query: telnetd와 일치하는 패키지를 찾지 못했습니다
+root@song-virtual-machine:~# apt-get -y install xinetd telnetd
+    패키지 목록을 읽는 중입니다... 완료
+    의존성 트리를 만드는 중입니다... 완료
+    상태 정보를 읽는 중입니다... 완료        
+    다음 새 패키지를 설치할 것입니다:
+    telnetd xinetd
+    0개 업그레이드, 2개 새로 설치, 0개 제거 및 0개 업그레이드 안 함.
+    147 k바이트 아카이브를 받아야 합니다.
+    이 작업 후 420 k바이트의 디스크 공간을 더 사용하게 됩니다.
+    받기:1 http://mirrors.edge.kernel.org/ubuntu bionic/universe amd64 xinetd amd64 1:2.3.15.3-1 [108 kB]
+    받기:2 http://mirrors.edge.kernel.org/ubuntu bionic/universe amd64 telnetd amd64 0.17-41 [39.3 kB]
+    내려받기 147 k바이트, 소요시간 2초 (61.0 k바이트/초)
+    Selecting previously unselected package xinetd.
+    (데이터베이스 읽는중 ...현재 202770개의 파일과 디렉터리가 설치되어 있습니다.)
+    Preparing to unpack .../xinetd_1%3a2.3.15.3-1_amd64.deb ...
+    Unpacking xinetd (1:2.3.15.3-1) ...
+    Selecting previously unselected package telnetd.
+    Preparing to unpack .../telnetd_0.17-41_amd64.deb ...
+    Unpacking telnetd (0.17-41) ...
+    xinetd (1:2.3.15.3-1) 설정하는 중입니다 ...
+    telnetd (0.17-41) 설정하는 중입니다 ...
+    사용자 telnetd을(를) utmp 그룹에 등록 중
+    Note: xinetd currently is not fully supported by update-inetd.
+    Please consult /usr/share/doc/xinetd/README.Debian and itox(8).
+    update-inetd: warning: cannot add service, /etc/inetd.conf does not exist
+    Processing triggers for man-db (2.10.2-1) ...
+root@song-virtual-machine:~# cd /etc/xinetd.d
+root@song-virtual-machine:/etc/xinetd.d# nano telnet
+    // 해당 파일에 밑 내용 입력
+    service telnet
+    {
+            disable = no
+            flags = REUSE
+            socket_type = stream
+            wait = no
+            user = root
+            server = /usr/sbin/in.telnetd
+            log_on_failure += USERID
+    }
+root@song-virtual-machine:/etc/xinetd.d# cd
+root@song-virtual-machine:~# adduser teluser
+    'teluser' 사용자를 추가 중...
+    새 그룹 'teluser' (1004) 추가 ...
+    새 사용자 'teluser' (1006) 을(를) 그룹 'teluser' (으)로 추가 ...
+    '/home/teluser' 홈 디렉터리를 생성하는 중...
+    '/etc/skel'에서 파일들을 복사하는 중...
+    새 암호: 
+    잘못된 비밀번호: 암호는 8 개의 문자 보다 짧습니다
+    새 암호 재입력: 
+    passwd: 암호를 성공적으로 업데이트했습니다
+    teluser의 사용자의 정보를 바꿉니다
+    새로운 값을 넣거나, 기본값을 원하시면 엔터를 치세요
+        이름 []: 
+        방 번호 []: 
+        직장 전화번호 []: 
+        집 전화번호 []: 
+        기타 []: 
+    정보가 올바릅니까? [Y/n] y
+root@song-virtual-machine:~# systemctl restart xinetd
+root@song-virtual-machine:~# systemctl enable xinetd
+    xinetd.service is not a native service, redirecting to systemd-sysv-install.
+    Executing: /lib/systemd/systemd-sysv-install enable xinetd
+root@song-virtual-machine:~# systemctl status xinetd
+    ● xinetd.service - LSB: Starts or stops the xinetd daemon.
+        Loaded: loaded (/etc/init.d/xinetd; generated)
+        Active: active (running) since Tue 2023-05-30 09:40:05 KST; 47s ago
+        Docs: man:systemd-sysv-generator(8)
+        Tasks: 1 (limit: 4573)
+        Memory: 500.0K
+            CPU: 88ms
+        CGroup: /system.slice/xinetd.service
+                └─2487 /usr/sbin/xinetd -pidfile /run/xinetd.pid -stayalive -inetd>
+
+    5월 30 09:40:05 song-virtual-machine xinetd[2487]: Reading included configurat>
+    5월 30 09:40:05 song-virtual-machine xinetd[2487]: Reading included configurat>
+    5월 30 09:40:05 song-virtual-machine xinetd[2487]: Reading included configurat>
+    5월 30 09:40:05 song-virtual-machine xinetd[2487]: Reading included configurat>
+    5월 30 09:40:05 song-virtual-machine xinetd[2487]: Reading included configurat>
+    5월 30 09:40:05 song-virtual-machine xinetd[2487]: Reading included configurat>
+    5월 30 09:40:05 song-virtual-machine xinetd[2487]: Reading included configurat>
+    5월 30 09:40:05 song-virtual-machine xinetd[2487]: Reading included configurat>
+    5월 30 09:40:05 song-virtual-machine xinetd[2487]: 2.3.15.3 started with libwr>
+    5월 30 09:40:05 song-virtual-machine xinetd[2487]: Started working: 1 availabl>
+root@song-virtual-machine:~# ufw allow 23/tcp
+    규칙이 추가되었습니다
+    규칙이 추가되었습니다 (v6)
+root@song-virtual-machine:~# ifconfig // or ifconfig ens33
+    ens33: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+            inet 192.168.133.128  netmask 255.255.255.0  broadcast 192.168.133.255
+            inet6 fe80::c8aa:f776:3c9a:495d  prefixlen 64  scopeid 0x20<link>
+            ether 00:0c:29:7a:d8:58  txqueuelen 1000  (Ethernet)
+            RX packets 504  bytes 287810 (287.8 KB)
+            RX errors 0  dropped 0  overruns 0  frame 0
+            TX packets 221  bytes 38535 (38.5 KB)
+            TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+    lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+            inet 127.0.0.1  netmask 255.0.0.0
+            inet6 ::1  prefixlen 128  scopeid 0x10<host>
+            loop  txqueuelen 1000  (Local Loopback)
+            RX packets 133  bytes 11754 (11.7 KB)
+            RX errors 0  dropped 0  overruns 0  frame 0
+            TX packets 133  bytes 11754 (11.7 KB)
+            TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[2교시]
+CMD 창
+Microsoft Windows [Version 10.0.19045.2965]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\AISW509-09>telnet 192.168.133.128 23
+
+song-virtual-machine login: teluser
+Password:
+    Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.19.0-35-generic x86_64)
+
+    * Documentation:  https://help.ubuntu.com
+    * Management:     https://landscape.canonical.com
+    * Support:        https://ubuntu.com/advantage
+
+    * Introducing Expanded Security Maintenance for Applications.
+    Receive updates to over 25,000 software packages with your
+    Ubuntu Pro subscription. Free for personal use.
+
+        https://ubuntu.com/pro
+
+    Expanded Security Maintenance for Applications is not enabled.
+
+    0 updates can be applied immediately.
+
+    Enable ESM Apps to receive additional future security updates.
+    See https://ubuntu.com/esm or run: sudo pro status
+
+
+    The programs included with the Ubuntu system are free software;
+    the exact distribution terms for each program are described in the
+    individual files in /usr/share/doc/*/copyright.
+
+    Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+    applicable law.
+
+[3교시]
+// OpenSSH 서버 설치하고 사용하기(P.392~394)
+root@song-virtual-machine:~# cd /etc/apt
+root@song-virtual-machine:/etc/apt# nano sources.list
+    // mirrors 사이트 주소 주석 처리 및 각각의 두 번째 행을 'bionic-updates'로 수정 후 저장
+    deb http://ftp.daumkakao.com/ubuntu/ bionic main
+    deb http://kr.archive.ubuntu.com/ubuntu/ bionic-updates main
+    #deb http://mirrors.edge.kernel.org/ubuntu/ bionic main
+
+    deb http://ftp.daumkakao.com/ubuntu/ bionic universe
+    deb http://kr.archive.ubuntu.com/ubuntu/ bionic-updates universe
+    #deb http://mirrors.edge.kernel.org/ubuntu/ bionic universe
+
+    deb http://ftp.daumkakao.com/ubuntu/ bionic multiverse
+    deb http://kr.archive.ubuntu.com/ubuntu/ bionic-updates multiverse
+    #deb http://mirrors.edge.kernel.org/ubuntu/ bionic multiverse
+
+    deb http://ftp.daumkakao.com/ubuntu/ bionic restricted
+    deb http://kr.archive.ubuntu.com/ubuntu/ bionic-updates restricted
+    #deb http://mirrors.edge.kernel.org/ubuntu/ bionic restricted
+root@song-virtual-machine:/etc/apt# apt-get update
+    받기:2 http://kr.archive.ubuntu.com/ubuntu bionic-updates InRelease [88.7 kB]  
+    받기:1 http://mirror.kakao.com/ubuntu bionic InRelease [242 kB]                
+    받기:3 http://mirror.kakao.com/ubuntu bionic/main amd64 Packages [1,019 kB]    
+    받기:4 http://mirror.kakao.com/ubuntu bionic/main i386 Packages [1,007 kB]     
+    받기:5 http://mirror.kakao.com/ubuntu bionic/main Translation-en [516 kB]      
+    받기:6 http://mirror.kakao.com/ubuntu bionic/main Translation-ko [215 kB]      
+    받기:7 http://mirror.kakao.com/ubuntu bionic/main amd64 DEP-11 Metadata [477 kB]
+    받기:8 http://mirror.kakao.com/ubuntu bionic/main DEP-11 48x48 Icons [118 kB]  
+    받기:9 http://mirror.kakao.com/ubuntu bionic/main DEP-11 64x64 Icons [245 kB]  
+    받기:10 http://mirror.kakao.com/ubuntu bionic/main DEP-11 64x64@2 Icons [29 B] 
+    받기:11 http://mirror.kakao.com/ubuntu bionic/universe i386 Packages [8,531 kB]
+    받기:12 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 Packages [3,008 kB]
+    받기:13 http://mirror.kakao.com/ubuntu bionic/universe amd64 Packages [8,570 kB]
+    받기:14 https://dl.google.com/linux/chrome/deb stable InRelease [1,825 B]      
+    받기:15 https://dl.google.com/linux/chrome/deb stable/main amd64 Packages [1,075 B]
+    받기:16 http://mirror.kakao.com/ubuntu bionic/universe Translation-ko [458 kB] 
+    받기:17 http://mirror.kakao.com/ubuntu bionic/universe Translation-en [4,941 kB]
+    받기:18 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main i386 Packages [1,650 kB]
+    받기:19 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main Translation-en [548 kB]
+    받기:20 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 DEP-11 Metadata [296 kB]
+    받기:21 http://mirror.kakao.com/ubuntu bionic/universe amd64 DEP-11 Metadata [3,287 kB]
+    받기:22 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main DEP-11 48x48 Icons [83.0 kB]
+    받기:23 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main DEP-11 64x64 Icons [154 kB]
+    받기:24 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main DEP-11 64x64@2 Icons [29 B]
+    받기:25 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe i386 Packages [1,661 kB]
+    받기:26 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe amd64 Packages [1,905 kB]
+    받기:27 http://mirror.kakao.com/ubuntu bionic/universe DEP-11 48x48 Icons [2,151 kB]
+    받기:28 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe Translation-en [419 kB]
+    받기:29 http://mirror.kakao.com/ubuntu bionic/universe DEP-11 64x64 Icons [8,420 kB]
+    받기:30 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe amd64 DEP-11 Metadata [303 kB]
+    받기:31 http://mirror.kakao.com/ubuntu bionic/universe DEP-11 64x64@2 Icons [29 B]
+    받기:32 http://mirror.kakao.com/ubuntu bionic/multiverse amd64 Packages [151 kB]
+    받기:33 http://mirror.kakao.com/ubuntu bionic/multiverse i386 Packages [144 kB]
+    받기:34 http://mirror.kakao.com/ubuntu bionic/multiverse Translation-ko [492 B]
+    받기:35 http://mirror.kakao.com/ubuntu bionic/multiverse Translation-en [108 kB]
+    받기:36 http://mirror.kakao.com/ubuntu bionic/multiverse amd64 DEP-11 Metadata [49.7 kB]
+    받기:37 http://mirror.kakao.com/ubuntu bionic/multiverse DEP-11 48x48 Icons [8,931 B]
+    받기:38 http://mirror.kakao.com/ubuntu bionic/multiverse DEP-11 64x64 Icons [225 kB]
+    받기:39 http://mirror.kakao.com/ubuntu bionic/multiverse DEP-11 64x64@2 Icons [29 B]
+    받기:40 http://mirror.kakao.com/ubuntu bionic/restricted i386 Packages [9,156 B]
+    받기:41 http://mirror.kakao.com/ubuntu bionic/restricted amd64 Packages [9,184 B]
+    받기:42 http://mirror.kakao.com/ubuntu bionic/restricted Translation-en [3,584 B]
+    받기:43 http://mirror.kakao.com/ubuntu bionic/restricted Translation-ko [308 B]
+    받기:44 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe DEP-11 48x48 Icons [237 kB]
+    받기:45 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe DEP-11 64x64 Icons [521 kB]
+    받기:46 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe DEP-11 64x64@2 Icons [29 B]
+    받기:47 http://kr.archive.ubuntu.com/ubuntu bionic-updates/multiverse i386 Packages [11.2 kB]
+    받기:48 http://kr.archive.ubuntu.com/ubuntu bionic-updates/multiverse amd64 Packages [25.6 kB]
+    받기:49 http://kr.archive.ubuntu.com/ubuntu bionic-updates/multiverse Translation-en [6,088 B]
+    받기:50 http://kr.archive.ubuntu.com/ubuntu bionic-updates/multiverse amd64 DEP-11 Metadata [2,468 B]
+    받기:51 http://kr.archive.ubuntu.com/ubuntu bionic-updates/multiverse DEP-11 48x48 Icons [29 B]
+    받기:52 http://kr.archive.ubuntu.com/ubuntu bionic-updates/multiverse DEP-11 64x64 Icons [2,638 B]
+    받기:53 http://kr.archive.ubuntu.com/ubuntu bionic-updates/multiverse DEP-11 64x64@2 Icons [29 B]
+    받기:54 http://kr.archive.ubuntu.com/ubuntu bionic-updates/restricted i386 Packages [39.7 kB]
+    받기:55 http://kr.archive.ubuntu.com/ubuntu bionic-updates/restricted amd64 Packages [1,300 kB]
+    받기:56 http://kr.archive.ubuntu.com/ubuntu bionic-updates/restricted Translation-en [180 kB]
+    내려받기 53.4 M바이트, 소요시간 12초 (4,450 k바이트/초)                        
+    패키지 목록을 읽는 중입니다... 완료
+    W: http://ftp.daumkakao.com/ubuntu/dists/bionic/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+    W: http://kr.archive.ubuntu.com/ubuntu/dists/bionic-updates/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+
+// Server에서 apt-get -y install openssh-server 오류남. Server(B)로 바꿔 진행.
+Server(B)에서 root로 로그인
+root@serverb:~# cd /etc/apt
+root@serverb:/etc/apt# nano sources.list
+    // 각각의 두 번째 행을 'bionic-updates'로 수정 후 저장
+    deb http://ftp.daumkakao.com/ubuntu/ bionic main
+    deb http://kr.archive.ubuntu.com/ubuntu/ bionic-updates main
+
+    deb http://ftp.daumkakao.com/ubuntu/ bionic universe
+    deb http://kr.archive.ubuntu.com/ubuntu/ bionic-updates universe
+
+    deb http://ftp.daumkakao.com/ubuntu/ bionic multiverse
+    deb http://kr.archive.ubuntu.com/ubuntu/ bionic-updates multiverse
+
+    deb http://ftp.daumkakao.com/ubuntu/ bionic restricted
+    deb http://kr.archive.ubuntu.com/ubuntu/ bionic-updates restricted
+root@serverb:/etc/apt# apt-get update 
+root@serverb:/etc/apt# apt-get -y install openssh-server
+root@serverb:/etc/apt# ufw allow 23/tcp
+root@serverb:/etc/apt# apt install net-tools
+root@serverb:/etc/apt# ifconfig // or ifconfig ens32
+
+// Server로 바꿔 진행.
+root@song-virtual-machine:/etc/apt# ssh
+    usage: ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-B bind_interface]
+            [-b bind_address] [-c cipher_spec] [-D [bind_address:]port]
+            [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11]
+            [-i identity_file] [-J [user@]host[:port]] [-L address]
+            [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]
+            [-Q query_option] [-R address] [-S ctl_path] [-W host:port]
+            [-w local_tun[:remote_tun]] destination [command [argument ...]]
+root@song-virtual-machine:/etc/apt# ssh ubuntu@192.168.133.129
+    The authenticity of host '192.168.133.129 (192.168.133.129)' can't be established.
+    ED25519 key fingerprint is SHA256:bALUNqJ0qxTD1alCaBdejupujtdppDjGkclDdcSeGCE.
+    This key is not known by any other names
+    Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+    Warning: Permanently added '192.168.40.129' (ED25519) to the list of known hosts.
+    ubuntu@192.168.133.129's password: 
+    Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.0-67-generic x86_64)
+
+    * Documentation:  https://help.ubuntu.com
+    * Management:     https://landscape.canonical.com
+    * Support:        https://ubuntu.com/advantage
+
+    System information as of Tue May 30 02:45:42 AM UTC 2023
+
+    System load:  0.04296875        Processes:              204
+    Usage of /:   31.3% of 9.75GB   Users logged in:        1
+    Memory usage: 10%               IPv4 address for ens32: 192.168.133.129
+    Swap usage:   0%
+
+    * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+    just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+    https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+    * Introducing Expanded Security Maintenance for Applications.
+    Receive updates to over 25,000 software packages with your
+    Ubuntu Pro subscription. Free for personal use.
+
+        https://ubuntu.com/pro
+
+    Expanded Security Maintenance for Applications is not enabled.
+
+    22 updates can be applied immediately.
+    To see these additional updates run: apt list --upgradable
+
+    Enable ESM Apps to receive additional future security updates.
+    See https://ubuntu.com/esm or run: sudo pro status
+
+
+    The list of available updates is more than a week old.
+    To check for new updates run: sudo apt update
+
+    Last login: Tue Mar 28 01:22:34 2023
+ubuntu@serverb:~$ ls
