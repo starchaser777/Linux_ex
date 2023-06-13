@@ -1,0 +1,528 @@
+[1교시]
+// [실습 12-3] VNC 서버 설치하고 사용하기(p.395~398)
+
+// 화면 공유 설정하기(p.396)
+
+root@song-virtual-machine:~# apt-get install dconf-editor
+    패키지 목록을 읽는 중입니다... 완료
+    의존성 트리를 만드는 중입니다... 완료
+    상태 정보를 읽는 중입니다... 완료        
+    다음 새 패키지를 설치할 것입니다:
+    dconf-editor
+    0개 업그레이드, 1개 새로 설치, 0개 제거 및 10개 업그레이드 안 함.
+    390 k바이트 아카이브를 받아야 합니다.
+    이 작업 후 2,100 k바이트의 디스크 공간을 더 사용하게 됩니다.
+    받기:1 http://mirror.kakao.com/ubuntu bionic/universe amd64 dconf-editor amd64 3.28.0-1 [390 kB]
+    내려받기 390 k바이트, 소요시간 0초 (1,935 k바이트/초)
+    Selecting previously unselected package dconf-editor.
+    (데이터베이스 읽는중 ...현재 202820개의 파일과 디렉터리가 설치되어 있습니다.)
+    Preparing to unpack .../dconf-editor_3.28.0-1_amd64.deb ...
+    Unpacking dconf-editor (3.28.0-1) ...
+    dconf-editor (3.28.0-1) 설정하는 중입니다 ...
+    Processing triggers for hicolor-icon-theme (0.17-2) ...
+    Processing triggers for gnome-menus (3.36.0-1ubuntu3) ...
+    Processing triggers for libglib2.0-0:amd64 (2.72.4-0ubuntu1) ...
+    Processing triggers for man-db (2.10.2-1) ...
+    Processing triggers for mailcap (3.70+nmu1ubuntu1) ...
+    Processing triggers for desktop-file-utils (0.26-1ubuntu3) ...
+root@song-virtual-machine:~# dconf-editor
+
+    ** (dconf-editor:2858): WARNING **: 09:39:06.798: source-manager.vala:98: Schema with id “org.gnome.desktop.remote-desktop” contains neither keys nor children.
+
+    // dconf-editor 설정 2-5(p.397)
+
+root@song-virtual-machine:~# ufw allow 5900/tcp
+    규칙이 추가되었습니다
+    규칙이 추가되었습니다 (v6)
+root@song-virtual-machine:~# ifconfig
+    ens33: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+            inet 192.168.133.128  netmask 255.255.255.0  broadcast 192.168.133.255
+            inet6 fe80::c8aa:f776:3c9a:495d  prefixlen 64  scopeid 0x20<link>
+            ether 00:0c:29:7a:d8:58  txqueuelen 1000  (Ethernet)
+            RX packets 116261  bytes 174681652 (174.6 MB)
+            RX errors 0  dropped 0  overruns 0  frame 0
+            TX packets 6421  bytes 438524 (438.5 KB)
+            TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+    lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+            inet 127.0.0.1  netmask 255.0.0.0
+            inet6 ::1  prefixlen 128  scopeid 0x10<host>
+            loop  txqueuelen 1000  (Local Loopback)
+            RX packets 277  bytes 23574 (23.5 KB)
+            RX errors 0  dropped 0  overruns 0  frame 0
+            TX packets 277  bytes 23574 (23.5 KB)
+            TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+root@song-virtual-machine:~# apt-get install xtightvncviewer
+    패키지 목록을 읽는 중입니다... 완료
+    의존성 트리를 만드는 중입니다... 완료
+    상태 정보를 읽는 중입니다... 완료        
+    제안하는 패키지:
+    tightvncserver ssh
+    다음 새 패키지를 설치할 것입니다:
+    xtightvncviewer
+    0개 업그레이드, 1개 새로 설치, 0개 제거 및 10개 업그레이드 안 함.
+    55.8 k바이트 아카이브를 받아야 합니다.
+    이 작업 후 164 k바이트의 디스크 공간을 더 사용하게 됩니다.
+    받기:1 http://mirror.kakao.com/ubuntu bionic/universe amd64 xtightvncviewer amd64 1.3.10-0ubuntu4 [55.8 kB]
+    내려받기 55.8 k바이트, 소요시간 0초 (285 k바이트/초)
+    Selecting previously unselected package xtightvncviewer.
+    (데이터베이스 읽는중 ...현재 202903개의 파일과 디렉터리가 설치되어 있습니다.)
+    Preparing to unpack .../xtightvncviewer_1.3.10-0ubuntu4_amd64.deb ...
+    Unpacking xtightvncviewer (1.3.10-0ubuntu4) ...
+    xtightvncviewer (1.3.10-0ubuntu4) 설정하는 중입니다 ...
+    update-alternatives: using /usr/bin/xtightvncviewer to provide /usr/bin/vncviewer (vncviewer) in auto mode
+    Processing triggers for man-db (2.10.2-1) ...
+root@song-virtual-machine:~# vncviewer 192.168.133.128
+    Connected to RFB server, using protocol version 3.8
+    Performing standard VNC authentication
+    Password: 
+    Authentication successful
+    vncviewer: read: Connection reset by peer
+
+[2교시]
+// [실습 13-1] apt-get 명령어로 웹 서버(Apache2) 설치하기(p.406~409)
+root@song-virtual-machine:~# dpkg -l apache2
+    dpkg-query: apache2와 일치하는 패키지를 찾지 못했습니다
+root@song-virtual-machine:~# apt-get update
+    기존:1 http://mirror.kakao.com/ubuntu bionic InRelease 
+    받기:2 https://dl.google.com/linux/chrome/deb stable InRelease [1,825 B]       
+    받기:3 https://dl.google.com/linux/chrome/deb stable/main amd64 Packages [1,080 B]
+    받기:4 http://kr.archive.ubuntu.com/ubuntu bionic-updates InRelease [88.7 kB]
+    받기:5 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main i386 Packages [1,661 kB]
+    받기:6 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 Packages [3,032 kB]
+    받기:7 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main Translation-en [552 kB]
+    받기:8 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 DEP-11 Metadata [297 kB]
+    받기:9 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe amd64 Packages [1,910 kB]
+    받기:10 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe i386 Packages [1,662 kB]
+    받기:11 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe Translation-en [420 kB]
+    받기:12 http://kr.archive.ubuntu.com/ubuntu bionic-updates/universe amd64 DEP-11 Metadata [304 kB]
+    받기:13 http://kr.archive.ubuntu.com/ubuntu bionic-updates/multiverse amd64 DEP-11 Metadata [2,468 B]
+    받기:14 http://kr.archive.ubuntu.com/ubuntu bionic-updates/restricted amd64 Packages [1,332 kB]
+    받기:15 http://kr.archive.ubuntu.com/ubuntu bionic-updates/restricted Translation-en [185 kB]
+    내려받기 11.4 M바이트, 소요시간 7초 (1,745 k바이트/초)                         
+    패키지 목록을 읽는 중입니다... 완료
+    W: http://ftp.daumkakao.com/ubuntu/dists/bionic/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+    W: http://kr.archive.ubuntu.com/ubuntu/dists/bionic-updates/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+root@song-virtual-machine:~# apt-get -y install apache2
+    패키지 목록을 읽는 중입니다... 완료
+    의존성 트리를 만드는 중입니다... 완료
+    상태 정보를 읽는 중입니다... 완료        
+    다음의 추가 패키지가 설치될 것입니다 :
+    apache2-bin apache2-data apache2-utils libapr1 libaprutil1
+    libaprutil1-dbd-sqlite3 libaprutil1-ldap libasn1-8-heimdal libgdbm5
+    libgssapi3-heimdal libhcrypto4-heimdal libheimbase1-heimdal
+    libheimntlm0-heimdal libhx509-5-heimdal libkrb5-26-heimdal libldap-2.4-2
+    liblua5.2-0 libroken18-heimdal libssl1.1 libwind0-heimdal
+    제안하는 패키지:
+    apache2-doc apache2-suexec-pristine | apache2-suexec-custom gdbm-l10n
+    다음 새 패키지를 설치할 것입니다:
+    apache2 apache2-bin apache2-data apache2-utils libapr1 libaprutil1
+    libaprutil1-dbd-sqlite3 libaprutil1-ldap libasn1-8-heimdal libgdbm5
+    libgssapi3-heimdal libhcrypto4-heimdal libheimbase1-heimdal
+    libheimntlm0-heimdal libhx509-5-heimdal libkrb5-26-heimdal libldap-2.4-2
+    liblua5.2-0 libroken18-heimdal libssl1.1 libwind0-heimdal
+    0개 업그레이드, 21개 새로 설치, 0개 제거 및 11개 업그레이드 안 함.
+    1,303 k바이트/4,002 k바이트 아카이브를 받아야 합니다.
+    이 작업 후 14.5 M바이트의 디스크 공간을 더 사용하게 됩니다.
+    받기:1 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 libssl1.1 amd64 1.1.1-1ubuntu2.1~18.04.23 [1,303 kB]
+    내려받기 1,303 k바이트, 소요시간 3초 (426 k바이트/초)                   
+    패키지를 미리 설정하는 중입니다...
+    Selecting previously unselected package libapr1:amd64.
+    (데이터베이스 읽는중 ...현재 202910개의 파일과 디렉터리가 설치되어 있습니다.)
+    Preparing to unpack .../00-libapr1_1.6.3-2_amd64.deb ...
+    Unpacking libapr1:amd64 (1.6.3-2) ...
+    Selecting previously unselected package libgdbm5:amd64.
+    Preparing to unpack .../01-libgdbm5_1.14.1-6_amd64.deb ...
+    Unpacking libgdbm5:amd64 (1.14.1-6) ...
+    Selecting previously unselected package libssl1.1:amd64.
+    Preparing to unpack .../02-libssl1.1_1.1.1-1ubuntu2.1~18.04.23_amd64.deb ...
+    Unpacking libssl1.1:amd64 (1.1.1-1ubuntu2.1~18.04.23) ...
+    Selecting previously unselected package libaprutil1:amd64.
+    Preparing to unpack .../03-libaprutil1_1.6.1-2ubuntu0.1_amd64.deb ...
+    Unpacking libaprutil1:amd64 (1.6.1-2ubuntu0.1) ...
+    Selecting previously unselected package libaprutil1-dbd-sqlite3:amd64.
+    Preparing to unpack .../04-libaprutil1-dbd-sqlite3_1.6.1-2ubuntu0.1_amd64.deb ...
+    Unpacking libaprutil1-dbd-sqlite3:amd64 (1.6.1-2ubuntu0.1) ...
+    Selecting previously unselected package libroken18-heimdal:amd64.
+    Preparing to unpack .../05-libroken18-heimdal_7.5.0+dfsg-1ubuntu0.4_amd64.deb ...
+    Unpacking libroken18-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) ...
+    Selecting previously unselected package libasn1-8-heimdal:amd64.
+    Preparing to unpack .../06-libasn1-8-heimdal_7.5.0+dfsg-1ubuntu0.4_amd64.deb ...
+    Unpacking libasn1-8-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) ...
+    Selecting previously unselected package libheimbase1-heimdal:amd64.
+    Preparing to unpack .../07-libheimbase1-heimdal_7.5.0+dfsg-1ubuntu0.4_amd64.deb ...
+    Unpacking libheimbase1-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) ...
+    Selecting previously unselected package libhcrypto4-heimdal:amd64.
+    Preparing to unpack .../08-libhcrypto4-heimdal_7.5.0+dfsg-1ubuntu0.4_amd64.deb ...
+    Unpacking libhcrypto4-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) ...
+    Selecting previously unselected package libwind0-heimdal:amd64.
+    Preparing to unpack .../09-libwind0-heimdal_7.5.0+dfsg-1ubuntu0.4_amd64.deb ...
+    Unpacking libwind0-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) ...
+    Selecting previously unselected package libhx509-5-heimdal:amd64.
+    Preparing to unpack .../10-libhx509-5-heimdal_7.5.0+dfsg-1ubuntu0.4_amd64.deb ...
+    Unpacking libhx509-5-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) ...
+    Selecting previously unselected package libkrb5-26-heimdal:amd64.
+    Preparing to unpack .../11-libkrb5-26-heimdal_7.5.0+dfsg-1ubuntu0.4_amd64.deb ...
+    Unpacking libkrb5-26-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) ...
+    Selecting previously unselected package libheimntlm0-heimdal:amd64.
+    Preparing to unpack .../12-libheimntlm0-heimdal_7.5.0+dfsg-1ubuntu0.4_amd64.deb ...
+    Unpacking libheimntlm0-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) ...
+    Selecting previously unselected package libgssapi3-heimdal:amd64.
+    Preparing to unpack .../13-libgssapi3-heimdal_7.5.0+dfsg-1ubuntu0.4_amd64.deb ...
+    Unpacking libgssapi3-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) ...
+    Selecting previously unselected package libldap-2.4-2:amd64.
+    Preparing to unpack .../14-libldap-2.4-2_2.4.45+dfsg-1ubuntu1.11_amd64.deb ...
+    Unpacking libldap-2.4-2:amd64 (2.4.45+dfsg-1ubuntu1.11) ...
+    Selecting previously unselected package libaprutil1-ldap:amd64.
+    Preparing to unpack .../15-libaprutil1-ldap_1.6.1-2ubuntu0.1_amd64.deb ...
+    Unpacking libaprutil1-ldap:amd64 (1.6.1-2ubuntu0.1) ...
+    Selecting previously unselected package liblua5.2-0:amd64.
+    Preparing to unpack .../16-liblua5.2-0_5.2.4-1.1build1_amd64.deb ...
+    Unpacking liblua5.2-0:amd64 (5.2.4-1.1build1) ...
+    Selecting previously unselected package apache2-bin.
+    Preparing to unpack .../17-apache2-bin_2.4.29-1ubuntu4.27_amd64.deb ...
+    Unpacking apache2-bin (2.4.29-1ubuntu4.27) ...
+    Selecting previously unselected package apache2-utils.
+    Preparing to unpack .../18-apache2-utils_2.4.29-1ubuntu4.27_amd64.deb ...
+    Unpacking apache2-utils (2.4.29-1ubuntu4.27) ...
+    Selecting previously unselected package apache2-data.
+    Preparing to unpack .../19-apache2-data_2.4.29-1ubuntu4.27_all.deb ...
+    Unpacking apache2-data (2.4.29-1ubuntu4.27) ...
+    Selecting previously unselected package apache2.
+    Preparing to unpack .../20-apache2_2.4.29-1ubuntu4.27_amd64.deb ...
+    Unpacking apache2 (2.4.29-1ubuntu4.27) ...
+    libgdbm5:amd64 (1.14.1-6) 설정하는 중입니다 ...
+    libssl1.1:amd64 (1.1.1-1ubuntu2.1~18.04.23) 설정하는 중입니다 ...
+    libapr1:amd64 (1.6.3-2) 설정하는 중입니다 ...
+    libroken18-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) 설정하는 중입니다 ...
+    liblua5.2-0:amd64 (5.2.4-1.1build1) 설정하는 중입니다 ...
+    apache2-data (2.4.29-1ubuntu4.27) 설정하는 중입니다 ...
+    libheimbase1-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) 설정하는 중입니다 ...
+    libaprutil1:amd64 (1.6.1-2ubuntu0.1) 설정하는 중입니다 ...
+    libasn1-8-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) 설정하는 중입니다 ...
+    libaprutil1-dbd-sqlite3:amd64 (1.6.1-2ubuntu0.1) 설정하는 중입니다 ...
+    libhcrypto4-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) 설정하는 중입니다 ...
+    libwind0-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) 설정하는 중입니다 ...
+    apache2-utils (2.4.29-1ubuntu4.27) 설정하는 중입니다 ...
+    libhx509-5-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) 설정하는 중입니다 ...
+    libkrb5-26-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) 설정하는 중입니다 ...
+    libheimntlm0-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) 설정하는 중입니다 ...
+    libgssapi3-heimdal:amd64 (7.5.0+dfsg-1ubuntu0.4) 설정하는 중입니다 ...
+    libldap-2.4-2:amd64 (2.4.45+dfsg-1ubuntu1.11) 설정하는 중입니다 ...
+    libaprutil1-ldap:amd64 (1.6.1-2ubuntu0.1) 설정하는 중입니다 ...
+    apache2-bin (2.4.29-1ubuntu4.27) 설정하는 중입니다 ...
+    apache2 (2.4.29-1ubuntu4.27) 설정하는 중입니다 ...
+    Enabling module mpm_event.
+    Enabling module authz_core.
+    Enabling module authz_host.
+    Enabling module authn_core.
+    Enabling module auth_basic.
+    Enabling module access_compat.
+    Enabling module authn_file.
+    Enabling module authz_user.
+    Enabling module alias.
+    Enabling module dir.
+    Enabling module autoindex.
+    Enabling module env.
+    Enabling module mime.
+    Enabling module negotiation.
+    Enabling module setenvif.
+    Enabling module filter.
+    Enabling module deflate.
+    Enabling module status.
+    Enabling module reqtimeout.
+    Enabling conf charset.
+    Enabling conf localized-error-pages.
+    Enabling conf other-vhosts-access-log.
+    Enabling conf security.
+    Enabling conf serve-cgi-bin.
+    Enabling site 000-default.
+    Created symlink /etc/systemd/system/multi-user.target.wants/apache2.service → /lib/systemd/system/apache2.service.
+    Created symlink /etc/systemd/system/multi-user.target.wants/apache-htcacheclean.service → /lib/systemd/system/apache-htcacheclean.service.
+    Processing triggers for ufw (0.36.1-4build1) ...
+    Processing triggers for man-db (2.10.2-1) ...
+    Processing triggers for libc-bin (2.35-0ubuntu3.1) ...
+root@song-virtual-machine:~# dpkg -l apache2
+    희망상태=알수없음(U)/설치(I)/지우기(R)/깨끗이(P)/고정(H)
+    | 상태=아님(N)/설치(I)/설정(C)/풀림(U)/절반설정(F)/일부설치(H)/트리거대기(W)/
+    | /    트리거밀림(T)
+    |/ 오류?=(없음)/다시설치필요(R) (상태, 오류가 대문자=불량)
+    ||/ 이름           버전               Architecture 설명
+    +++-==============-==================-============-============================>
+    ii  apache2        2.4.29-1ubuntu4.27 amd64        Apache HTTP Server
+    lines 1-7/7 (END)
+root@song-virtual-machine:~# systemctl restart apache2
+root@song-virtual-machine:~# systemctl enable apache2
+    Synchronizing state of apache2.service with SysV service script with /lib/systemd/systemd-sysv-install.
+    Executing: /lib/systemd/systemd-sysv-install enable apache2
+root@song-virtual-machine:~# systemctl status apache2
+    ● apache2.service - The Apache HTTP Server
+        Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor prese>
+        Drop-In: /usr/lib/systemd/system/apache2.service.d
+                └─apache2-systemd.conf
+        Active: active (running) since Tue 2023-06-13 10:30:08 KST; 38s ago
+    Main PID: 4467 (apache2)
+        Tasks: 55 (limit: 4573)
+        Memory: 5.3M
+            CPU: 49ms
+        CGroup: /system.slice/apache2.service
+                ├─4467 /usr/sbin/apache2 -k start
+                ├─4468 /usr/sbin/apache2 -k start
+                └─4469 /usr/sbin/apache2 -k start
+
+    6월 13 10:30:08 song-virtual-machine systemd[1]: Starting The Apache HTTP Serv>
+    6월 13 10:30:08 song-virtual-machine apachectl[4465]: AH00558: apache2: Could >
+    6월 13 10:30:08 song-virtual-machine systemd[1]: Started The Apache HTTP Serve>
+    lines 1-17/17 (END)
+root@song-virtual-machine:~# cd /var/www/html
+root@song-virtual-machine:/var/www/html# ls
+    index.html
+root@song-virtual-machine:/var/www/html# nano index.html
+root@song-virtual-machine:/var/www/html# ifconfig
+    ens33: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+            inet 192.168.133.128  netmask 255.255.255.0  broadcast 192.168.133.255
+            inet6 fe80::c8aa:f776:3c9a:495d  prefixlen 64  scopeid 0x20<link>
+            ether 00:0c:29:7a:d8:58  txqueuelen 1000  (Ethernet)
+            RX packets 138624  bytes 206023592 (206.0 MB)
+            RX errors 0  dropped 0  overruns 0  frame 0
+            TX packets 11790  bytes 886401 (886.4 KB)
+            TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+    lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+            inet 127.0.0.1  netmask 255.0.0.0
+            inet6 ::1  prefixlen 128  scopeid 0x10<host>
+            loop  txqueuelen 1000  (Local Loopback)
+            RX packets 672  bytes 75401 (75.4 KB)
+            RX errors 0  dropped 0  overruns 0  frame 0
+            TX packets 672  bytes 75401 (75.4 KB)
+            TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+// 파이어폭스 실행 및 주소창에 'localhost' 혹은 inet 주소 입력
+
+root@song-virtual-machine:/var/www/html# ufw allow 80
+    규칙이 추가되었습니다
+    규칙이 추가되었습니다 (v6)
+root@song-virtual-machine:/var/www/html# cd
+root@song-virtual-machine:~# ls
+    linkdir     poly1.xz  test2      text2.txt.xz  문서      사진
+    mydata.txt  snap      text1.txt  공개          바탕화면  음악
+    poly.tar    test      text2.txt  다운로드      비디오    템플릿
+root@song-virtual-machine:~# cd 다운로드
+root@song-virtual-machine:~/다운로드# ls
+    0612-master                             mc_4.8.28-1_amd64.deb
+    0612-master.zip                         ncftp_3.2.6-1_amd64.deb
+    google-chrome-stable_current_amd64.deb
+root@song-virtual-machine:~/다운로드# cd 0612-master
+root@song-virtual-machine:~/다운로드/0612-master# ls
+    01.html  04.html  07.html  10.html  13.html  16.html  19.html  22.html
+    02.html  05.html  08.html  11.html  14.html  17.html  20.html  23.html
+    03.html  06.html  09.html  12.html  15.html  18.html  21.html
+root@song-virtual-machine:~/다운로드/0612-master# mv *.html /var/www/html
+root@song-virtual-machine:~/다운로드/0612-master# cd /var/www/html
+root@song-virtual-machine:/var/www/html# ls
+    01.html  04.html  07.html  10.html  13.html  16.html  19.html  22.html
+    02.html  05.html  08.html  11.html  14.html  17.html  20.html  23.html
+    03.html  06.html  09.html  12.html  15.html  18.html  21.html  index.html
+
+[3교시]
+// [실습 13-1] apt-get 명령어로 웹 서버(Apache2) 설치하기(p.404~406)
+root@song-virtual-machine:/var/www/html# cd
+root@song-virtual-machine:~# nm-connection-editor
+// 고정 IP 주소로 설정 변경
+root@song-virtual-machine:~# reboot
+
+root@song-virtual-machine:~# systemctl status apache2
+    ● apache2.service - The Apache HTTP Server
+        Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor prese>
+        Drop-In: /usr/lib/systemd/system/apache2.service.d
+                └─apache2-systemd.conf
+        Active: active (running) since Tue 2023-06-13 11:31:17 KST; 49s ago
+        Process: 821 ExecStart=/usr/sbin/apachectl start (code=exited, status=0/SUC>
+    Main PID: 896 (apache2)
+        Tasks: 55 (limit: 4573)
+        Memory: 7.7M
+            CPU: 63ms
+        CGroup: /system.slice/apache2.service
+                ├─896 /usr/sbin/apache2 -k start
+                ├─897 /usr/sbin/apache2 -k start
+                └─898 /usr/sbin/apache2 -k start
+
+    6월 13 11:31:17 song-virtual-machine systemd[1]: Starting The Apache HTTP Serv>
+    6월 13 11:31:17 song-virtual-machine apachectl[857]: AH00558: apache2: Could n>
+    6월 13 11:31:17 song-virtual-machine systemd[1]: Started The Apache HTTP Serve>
+    lines 1-18/18 (END)
+root@song-virtual-machine:~# ping -c 3 192.168.133.128
+    PING 192.168.133.128 (192.168.133.128) 56(84) bytes of data.
+    64 bytes from 192.168.133.128: icmp_seq=1 ttl=64 time=0.065 ms
+    64 bytes from 192.168.133.128: icmp_seq=2 ttl=64 time=0.079 ms
+    64 bytes from 192.168.133.128: icmp_seq=3 ttl=64 time=0.079 ms
+
+    --- 192.168.133.128 ping statistics ---
+    3 packets transmitted, 3 received, 0% packet loss, time 2035ms
+    rtt min/avg/max/mdev = 0.065/0.074/0.079/0.006 ms
+    // 핑을 날려도 다른 컴퓨터 IP 주소로 접속되지 않음.
+
+// [실습 13-2] XE 설치하고 운영하기 - XE 설치를 위한 mySQL과 php7.2 다운로드(p.410)
+root@song-virtual-machine:~# apt-get update
+    기존:1 http://mirror.kakao.com/ubuntu bionic InRelease                         
+    기존:2 https://dl.google.com/linux/chrome/deb stable InRelease                 
+    받기:3 http://kr.archive.ubuntu.com/ubuntu bionic-updates InRelease [88.7 kB] 
+    내려받기 88.7 k바이트, 소요시간 1초 (64.3 k바이트/초)
+    패키지 목록을 읽는 중입니다... 완료
+    W: http://ftp.daumkakao.com/ubuntu/dists/bionic/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+    W: http://kr.archive.ubuntu.com/ubuntu/dists/bionic-updates/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+root@song-virtual-machine:~# apt-get -y install mysql-server
+    패키지 목록을 읽는 중입니다... 완료
+    의존성 트리를 만드는 중입니다... 완료
+    상태 정보를 읽는 중입니다... 완료        
+    다음의 추가 패키지가 설치될 것입니다 :
+    libaio1 libcgi-pm-perl libevent-core-2.1-6 libhtml-template-perl
+    mysql-client-5.7 mysql-client-core-5.7 mysql-common mysql-server-5.7
+    mysql-server-core-5.7
+    제안하는 패키지:
+    libipc-sharedcache-perl mailx tinyca
+    추천하는 패키지:
+    libcgi-fast-perl
+    다음 새 패키지를 설치할 것입니다:
+    libaio1 libcgi-pm-perl libevent-core-2.1-6 libhtml-template-perl
+    mysql-client-5.7 mysql-client-core-5.7 mysql-common mysql-server
+    mysql-server-5.7 mysql-server-core-5.7
+    0개 업그레이드, 10개 새로 설치, 0개 제거 및 11개 업그레이드 안 함.
+    19.7 M바이트 아카이브를 받아야 합니다.
+    이 작업 후 156 M바이트의 디스크 공간을 더 사용하게 됩니다.
+    받기:1 http://mirror.kakao.com/ubuntu bionic/main amd64 mysql-common all 5.8+1.0.4 [7,308 B]
+    받기:2 http://mirror.kakao.com/ubuntu bionic/main amd64 libevent-core-2.1-6 amd64 2.1.8-stable-4build1 [85.9 kB]
+    받기:3 http://mirror.kakao.com/ubuntu bionic/main amd64 libcgi-pm-perl all 4.38-1 [185 kB]
+    받기:4 http://mirror.kakao.com/ubuntu bionic/main amd64 libhtml-template-perl all 2.97-1 [59.0 kB]
+    받기:5 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 libaio1 amd64 0.3.110-5ubuntu0.1 [6,476 B]
+    받기:6 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 mysql-client-core-5.7 amd64 5.7.42-0ubuntu0.18.04.1 [6,752 kB]
+    받기:7 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 mysql-client-5.7 amd64 5.7.42-0ubuntu0.18.04.1 [2,028 kB]
+    받기:8 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 mysql-server-core-5.7 amd64 5.7.42-0ubuntu0.18.04.1 [7,542 kB]
+    받기:9 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 mysql-server-5.7 amd64 5.7.42-0ubuntu0.18.04.1 [3,011 kB]
+    받기:10 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 mysql-server all 5.7.42-0ubuntu0.18.04.1 [9,944 B]
+    내려받기 19.7 M바이트, 소요시간 5초 (3,738 k바이트/초)
+    패키지를 미리 설정하는 중입니다...
+    Selecting previously unselected package mysql-common.
+    (데이터베이스 읽는중 ...현재 203695개의 파일과 디렉터리가 설치되어 있습니다.)
+    Preparing to unpack .../0-mysql-common_5.8+1.0.4_all.deb ...
+    Unpacking mysql-common (5.8+1.0.4) ...
+    Selecting previously unselected package libaio1:amd64.
+    Preparing to unpack .../1-libaio1_0.3.110-5ubuntu0.1_amd64.deb ...
+    Unpacking libaio1:amd64 (0.3.110-5ubuntu0.1) ...
+    Selecting previously unselected package mysql-client-core-5.7.
+    Preparing to unpack .../2-mysql-client-core-5.7_5.7.42-0ubuntu0.18.04.1_amd64.deb ...
+    Unpacking mysql-client-core-5.7 (5.7.42-0ubuntu0.18.04.1) ...
+    Selecting previously unselected package mysql-client-5.7.
+    Preparing to unpack .../3-mysql-client-5.7_5.7.42-0ubuntu0.18.04.1_amd64.deb ...
+    Unpacking mysql-client-5.7 (5.7.42-0ubuntu0.18.04.1) ...
+    Selecting previously unselected package mysql-server-core-5.7.
+    Preparing to unpack .../4-mysql-server-core-5.7_5.7.42-0ubuntu0.18.04.1_amd64.deb ...
+    Unpacking mysql-server-core-5.7 (5.7.42-0ubuntu0.18.04.1) ...
+    Selecting previously unselected package libevent-core-2.1-6:amd64.
+    Preparing to unpack .../5-libevent-core-2.1-6_2.1.8-stable-4build1_amd64.deb ...
+    Unpacking libevent-core-2.1-6:amd64 (2.1.8-stable-4build1) ...
+    mysql-common (5.8+1.0.4) 설정하는 중입니다 ...
+    update-alternatives: using /etc/mysql/my.cnf.fallback to provide /etc/mysql/my.cnf (my.cnf) in auto mode
+    Selecting previously unselected package mysql-server-5.7.
+    (데이터베이스 읽는중 ...현재 203863개의 파일과 디렉터리가 설치되어 있습니다.)
+    Preparing to unpack .../mysql-server-5.7_5.7.42-0ubuntu0.18.04.1_amd64.deb ...
+    Unpacking mysql-server-5.7 (5.7.42-0ubuntu0.18.04.1) ...
+    Selecting previously unselected package libcgi-pm-perl.
+    Preparing to unpack .../libcgi-pm-perl_4.38-1_all.deb ...
+    Unpacking libcgi-pm-perl (4.38-1) ...
+    Selecting previously unselected package libhtml-template-perl.
+    Preparing to unpack .../libhtml-template-perl_2.97-1_all.deb ...
+    Unpacking libhtml-template-perl (2.97-1) ...
+    Selecting previously unselected package mysql-server.
+    Preparing to unpack .../mysql-server_5.7.42-0ubuntu0.18.04.1_all.deb ...
+    Unpacking mysql-server (5.7.42-0ubuntu0.18.04.1) ...
+    libcgi-pm-perl (4.38-1) 설정하는 중입니다 ...
+    libhtml-template-perl (2.97-1) 설정하는 중입니다 ...
+    libevent-core-2.1-6:amd64 (2.1.8-stable-4build1) 설정하는 중입니다 ...
+    libaio1:amd64 (0.3.110-5ubuntu0.1) 설정하는 중입니다 ...
+    mysql-server-core-5.7 (5.7.42-0ubuntu0.18.04.1) 설정하는 중입니다 ...
+    mysql-client-core-5.7 (5.7.42-0ubuntu0.18.04.1) 설정하는 중입니다 ...
+    mysql-client-5.7 (5.7.42-0ubuntu0.18.04.1) 설정하는 중입니다 ...
+    mysql-server-5.7 (5.7.42-0ubuntu0.18.04.1) 설정하는 중입니다 ...
+    update-alternatives: using /etc/mysql/mysql.cnf to provide /etc/mysql/my.cnf (my.cnf) in auto mode
+    Renaming removed key_buffer and myisam-recover options (if present)
+    Created symlink /etc/systemd/system/multi-user.target.wants/mysql.service → /lib/systemd/system/mysql.service.
+    mysql-server (5.7.42-0ubuntu0.18.04.1) 설정하는 중입니다 ...
+    Processing triggers for man-db (2.10.2-1) ...
+    Processing triggers for libc-bin (2.35-0ubuntu3.1) ...
+root@song-virtual-machine:~# systemctl restart mysql
+root@song-virtual-machine:~# systemctl enable mysql
+    Synchronizing state of mysql.service with SysV service script with /lib/systemd/systemd-sysv-install.
+    Executing: /lib/systemd/systemd-sysv-install enable mysql
+root@song-virtual-machine:~# systemctl status mysql
+    ● mysql.service - MySQL Community Server
+        Loaded: loaded (/lib/systemd/system/mysql.service; enabled; vendor preset:>
+        Active: active (running) since Tue 2023-06-13 11:41:36 KST; 35s ago
+    Main PID: 2901 (mysqld)
+        Tasks: 27 (limit: 4573)
+        Memory: 172.9M
+            CPU: 322ms
+        CGroup: /system.slice/mysql.service
+                └─2901 /usr/sbin/mysqld --daemonize --pid-file=/run/mysqld/mysqld.>
+
+    6월 13 11:41:35 song-virtual-machine systemd[1]: Starting MySQL Community Serv>
+    6월 13 11:41:36 song-virtual-machine systemd[1]: Started MySQL Community Serve>
+    lines 1-12/12 (END)
+
+root@song-virtual-machine:~# apt-get -y install php7.2-common
+    패키지 목록을 읽는 중입니다... 완료
+    의존성 트리를 만드는 중입니다... 완료
+    상태 정보를 읽는 중입니다... 완료        
+    다음의 추가 패키지가 설치될 것입니다 :
+    php-common
+    다음 새 패키지를 설치할 것입니다:
+    php-common php7.2-common
+    0개 업그레이드, 2개 새로 설치, 0개 제거 및 11개 업그레이드 안 함.
+    903 k바이트 아카이브를 받아야 합니다.
+    이 작업 후 6,712 k바이트의 디스크 공간을 더 사용하게 됩니다.
+    받기:1 http://mirror.kakao.com/ubuntu bionic/main amd64 php-common all 1:60ubuntu1 [12.1 kB]
+    받기:2 http://kr.archive.ubuntu.com/ubuntu bionic-updates/main amd64 php7.2-common amd64 7.2.24-0ubuntu0.18.04.17 [891 kB]
+    내려받기 903 k바이트, 소요시간 3초 (340 k바이트/초)                     
+    Selecting previously unselected package php-common.
+    (데이터베이스 읽는중 ...현재 203998개의 파일과 디렉터리가 설치되어 있습니다.)
+    Preparing to unpack .../php-common_1%3a60ubuntu1_all.deb ...
+    Unpacking php-common (1:60ubuntu1) ...
+    Selecting previously unselected package php7.2-common.
+    Preparing to unpack .../php7.2-common_7.2.24-0ubuntu0.18.04.17_amd64.deb ...
+    Unpacking php7.2-common (7.2.24-0ubuntu0.18.04.17) ...
+    php-common (1:60ubuntu1) 설정하는 중입니다 ...
+    Created symlink /etc/systemd/system/timers.target.wants/phpsessionclean.timer → /lib/systemd/system/phpsessionclean.timer.
+    php7.2-common (7.2.24-0ubuntu0.18.04.17) 설정하는 중입니다 ...
+
+    Creating config file /etc/php/7.2/mods-available/calendar.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/ctype.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/exif.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/fileinfo.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/ftp.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/gettext.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/iconv.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/pdo.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/phar.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/posix.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/shmop.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/sockets.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/sysvmsg.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/sysvsem.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/sysvshm.ini with new version
+
+    Creating config file /etc/php/7.2/mods-available/tokenizer.ini with new version
